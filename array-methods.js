@@ -98,7 +98,7 @@ function sumOfValue(previous, current){
   take each `amount` and add 18.9% interest to it rounded to the nearest cent
   and then sum it all up into one value saved to `sumOfInterests`
  */
-var sumOfInterests = parseFloat(dataset.filter(selectState).reduce(reduceSelectState , 0.02).toFixed(2));
+var sumOfInterests = parseFloat(dataset.filter(selectState).reduce(reduceSelectState , 0).toFixed(2));
 
 function selectState(elem){
   return ["WI", "IL", "WY", "OH", "GA", "DE"].indexOf(elem.state) > -1;
@@ -108,7 +108,7 @@ console.log(selectState(dataset));
 //var reduceSelectStateParse = parseFloat(reduceSelectState.toFixed(2));
 
 function reduceSelectState(num, elem){
-  var interestAll = parseFloat(elem.amount * 0.189);
+  var interestAll = parseFloat((elem.amount * 0.189).toFixed(2));
   console.log(interestAll);
   return num + interestAll ;
 }
