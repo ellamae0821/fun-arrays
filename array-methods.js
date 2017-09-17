@@ -6,16 +6,11 @@ var dataset = require('./dataset.json').bankBalances;
   assign the resulting new array to `hundredThousandairs`
 */
 
+
+var hundredThousandairs = dataset.filter(oneHundredThousand);
 function oneHundredThousand (elem) {
   return (elem.amount) > 100000;
 }
-var hundredThousandairs = dataset.filter(oneHundredThousand);
-
-
-
-
-
-
 
 /*
   DO NOT MUTATE DATA.
@@ -34,7 +29,15 @@ var hundredThousandairs = dataset.filter(oneHundredThousand);
     }
   assign the resulting new array to `datasetWithRoundedDollar`
 */
-var datasetWithRoundedDollar = null;
+var datasetWithRoundedDollar = dataset.map(newBankObjects);
+
+function newBankObjects (elem){
+  return{
+        amount: elem.amount,
+        state: elem.state,
+        rounded: Math.round(elem.amount)
+       };
+}
 
 /*
   DO NOT MUTATE DATA.
@@ -59,10 +62,30 @@ var datasetWithRoundedDollar = null;
     }
   assign the resulting new array to `roundedDime`
 */
-var datasetWithRoundedDime = null;
+var datasetWithRoundedDime = dataset.map(roundToTens);
+
+function roundToTens(elem){
+  return {
+    amount: elem.amount,
+    state: elem.state,
+    roundedDime: Math.round(elem.amount * 10)/ 10,
+  };
+}
 
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
-var sumOfBankBalances = null;
+
+var sumOfBankBalances1 = dataset.reduce(sumOfValue, 0);
+var sumOfBankBalances = parseFloat(sumOfBankBalances1.toFixed(2));
+var parseMain = parseFloat(sumOfValue)
+
+function sumOfValue(previous, current){
+  var parsedCurrent = parseFloat(current.amount);
+  return previous + parsedCurrent;
+}
+
+
+
+
 
 /*
   from each of the following states:
@@ -75,7 +98,22 @@ var sumOfBankBalances = null;
   take each `amount` and add 18.9% interest to it rounded to the nearest cent
   and then sum it all up into one value saved to `sumOfInterests`
  */
-var sumOfInterests = null;
+var sumOfInterests = parseFloat(dataset.filter(selectState).reduce(reduceSelectState , 0.02).toFixed(2));
+
+function selectState(elem){
+  return ["WI", "IL", "WY", "OH", "GA", "DE"].indexOf(elem.state) > -1;
+}
+console.log(selectState(dataset));
+
+//var reduceSelectStateParse = parseFloat(reduceSelectState.toFixed(2));
+
+function reduceSelectState(num, elem){
+  var interestAll = parseFloat(elem.amount * 0.189);
+  console.log(interestAll);
+  return num + interestAll ;
+}
+
+
 
 /*
   aggregate the sum of bankBalance amounts
@@ -93,6 +131,8 @@ var sumOfInterests = null;
     round this number to the nearest 10th of a cent before moving on.
   )
  */
+
+// object.keys +
 var stateSums = null;
 
 /*
