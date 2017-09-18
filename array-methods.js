@@ -7,11 +7,24 @@ var dataset = require('./dataset.json').bankBalances;
 */
 
 
-var hundredThousandairs = dataset.filter(oneHundredThousand);
+/*var hundredThousandairs = dataset.filter(oneHundredThousand);
 function oneHundredThousand (elem) {
   return (elem.amount) > 100000;
 }
+*/
 
+/*var hundredThousandairs = dataset.filter(oneHundredThousand);
+function oneHundredThousand(elem){
+  return (elem.amount) > 100000;
+}*/
+
+var hundredThousandairs = dataset.filter(function(item){
+  return (item.amount) > 100000;
+});
+
+/*var hundredThousandairs = dataset.filter(function(){
+  all =
+})*/
 /*
   DO NOT MUTATE DATA.
 
@@ -29,7 +42,7 @@ function oneHundredThousand (elem) {
     }
   assign the resulting new array to `datasetWithRoundedDollar`
 */
-var datasetWithRoundedDollar = dataset.map(newBankObjects);
+/*var datasetWithRoundedDollar = dataset.map(newBankObjects);
 
 function newBankObjects (elem){
   return{
@@ -38,6 +51,14 @@ function newBankObjects (elem){
         rounded: Math.round(elem.amount)
        };
 }
+*/
+var datasetWithRoundedDollar = dataset.map(function (item){
+  return {
+    amount: item.amount,
+    state: item.state,
+    rounded: Math.round(item.amount)
+  };
+});
 
 /*
   DO NOT MUTATE DATA.
@@ -62,7 +83,7 @@ function newBankObjects (elem){
     }
   assign the resulting new array to `roundedDime`
 */
-var datasetWithRoundedDime = dataset.map(roundToTens);
+/*var datasetWithRoundedDime = dataset.map(roundToTens);
 
 function roundToTens(elem){
   return {
@@ -70,21 +91,33 @@ function roundToTens(elem){
     state: elem.state,
     roundedDime: Math.round(elem.amount * 10)/ 10,
   };
-}
+}*/
 
+
+var datasetWithRoundedDime = dataset.map(function(item){
+  return{
+    amount: item.amount,
+    state: item.state,
+    roundedDime: Math.round(item.amount *10) /10,
+
+  };
+});
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
 
-var sumOfBankBalances1 = dataset.reduce(sumOfValue, 0);
-var sumOfBankBalances = parseFloat(sumOfBankBalances1.toFixed(2));
-var parseMain = parseFloat(sumOfValue)
+/*var sumOfBankBalances = Number(dataset.reduce(sumOfValue, 0).toFixed(2));
+//var sumOfBankBalances = parseFloat(sumOfBankBalances1.toFixed(2));
+//var parseMain = parseFloat(sumOfValue);
 
 function sumOfValue(previous, current){
-  var parsedCurrent = parseFloat(current.amount);
+  var parsedCurrent = Number(current.amount);
   return previous + parsedCurrent;
-}
+}*/
 
+var sumOfBankBalances = dataset.reduce(function(all, item, index){
+  return Math.round((all += parseFloat(item.amount))* 100) / 100;
+}, 0);
 
-
+//Math.round((num += parseFloat(element.amount)) * 100)/100
 
 
 /*
@@ -103,15 +136,16 @@ var sumOfInterests = parseFloat(dataset.filter(selectState).reduce(reduceSelectS
 function selectState(elem){
   return ["WI", "IL", "WY", "OH", "GA", "DE"].indexOf(elem.state) > -1;
 }
-console.log(selectState(dataset));
 
 //var reduceSelectStateParse = parseFloat(reduceSelectState.toFixed(2));
 
 function reduceSelectState(num, elem){
   var interestAll = parseFloat((elem.amount * 0.189).toFixed(2));
-  console.log(interestAll);
   return num + interestAll ;
 }
+
+
+//var sumOfInterests = dataset.filter()
 
 
 
@@ -133,7 +167,59 @@ function reduceSelectState(num, elem){
  */
 
 // object.keys +
-var stateSums = null;
+//var stateSums = null;
+
+var stateSums = dataset.reduce(function(all, item){
+
+  all[item.state] = item.amount;
+  return all;
+},{});
+
+/*
+function tax(element) {
+  return {
+    state: element.state,
+    tax: Math.round(element.amount * 18.9)/100
+  };
+}
+
+function arrToStateObj(obj, element) {
+  if(obj.hasOwnProperty(element.state)) {
+    obj[element.state] += Math.round(parseFloat(element.amount) * 100)/100;
+  } else {
+    obj[element.state] = Math.round(parseFloat(element.amount) * 100)/100;
+  }
+  obj[element.state] = Math.round(parseFloat(obj[element.state]) * 100)/ 100;
+
+  return obj;
+}
+
+function filterNonStates(element) {
+  return ["WI", "IL", "WY", "OH", "GA", "DE"].indexOf(element.state) === -1;
+}
+
+function filterAmt(element) {
+  return parseFloat(element.tax) > 50000;
+}
+
+function totalTaxNow(num, element) {
+  return Math.round((num + element.tax) * 100)/100;
+}
+
+let sumsOfStates = dataset.reduce(arrToStateObj, {});
+
+let newArr = Object.keys(sumsOfStates).map((keys) => {
+  return {
+    state: keys,
+    amount: sumsOfStates[keys]
+  };
+});
+
+var stateSums = newArr.filter(filterNonStates)
+  .map(tax)
+  .filter(filterAmt)
+  .reduce(totalTaxNow, 0);*/
+
 
 /*
   from each of the following states:
