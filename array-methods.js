@@ -18,8 +18,8 @@ function oneHundredThousand(elem){
   return (elem.amount) > 100000;
 }*/
 
-var hundredThousandairs = dataset.filter(function(item){
-  return (item.amount) > 100000;
+var hundredThousandairs = dataset.filter(function(balance){
+  return (balance.amount) > 100000;
 });
 
 /*var hundredThousandairs = dataset.filter(function(){
@@ -53,6 +53,7 @@ function newBankObjects (elem){
 }
 */
 var datasetWithRoundedDollar = dataset.map(function (item){
+  //create object literal
   return {
     amount: item.amount,
     state: item.state,
@@ -93,7 +94,7 @@ function roundToTens(elem){
   };
 }*/
 
-
+//USE MAP TO RETURN A NEW ARRAY, WITH ALL RETURNED VALUES FROM CALLBACK FUNCTION
 var datasetWithRoundedDime = dataset.map(function(item){
   return{
     amount: item.amount,
@@ -169,11 +170,33 @@ function reduceSelectState(num, elem){
 // object.keys +
 //var stateSums = null;
 
-var stateSums = dataset.reduce(function(all, item){
-
+/*var stateSums = dataset.reduce(function(all, item){
   all[item.state] = item.amount;
+  console.log(all);
+  return all;
+},{});*/
+/*var stateSums = dataset.reduce(function(all, cur){
+
+  var occurs = all.reduce(function (accum, item, index){
+    return (item.state === cur.state) ? index : accum;
+  }, -1);
+
+  console.log(occurs);
+  if (occurs >= 0){
+    all[item.state] = item.amount;
+  }
+
   return all;
 },{});
+*/
+
+var stateSums = dataset.reduce( totalPerStates, {} );
+
+function totalPerStates ( accum, item ){
+  accum[ item.state ] = parseFloat(( Number( item.amount )  + Number(( !accum.hasOwnProperty( item.state ) ) ? 0 : accum[ item.state ] ) ).toFixed(2));
+  return accum;
+}
+
 
 /*
 function tax(element) {
